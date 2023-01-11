@@ -35,9 +35,12 @@ class Favorites extends StatelessWidget {
                       children: [
                         ListTile(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
                                 builder: (context) =>
-                                    YoutubePlayer(video: favVideos[index])));
+                                    YoutubePlayerPage(video: favVideos[index]),
+                              ),
+                            );
                           },
                           leading: IconButton(
                             onPressed: () =>

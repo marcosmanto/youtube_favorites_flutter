@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  flutter_youtube_view: ^2.0.4
+  youtube_player_iframe_plus: ^2.3.2
   http: ^0.13.5
   shared_preferences: ^2.0.15
   rxdart: ^0.27.7

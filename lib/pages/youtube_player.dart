@@ -1,31 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube_view/flutter_youtube_view.dart';
-
+import 'package:flutter_html/flutter_html.dart';
+import 'package:youtube_player_iframe_plus/youtube_player_iframe_plus.dart';
 import '../models/video.dart';
 
-class YoutubePlayer extends StatelessWidget {
+class YoutubePlayerPage extends StatelessWidget {
   final Video video;
-  const YoutubePlayer({super.key, required this.video});
+  const YoutubePlayerPage({super.key, required this.video});
 
   @override
   Widget build(BuildContext context) {
+    YoutubePlayerController ytController = YoutubePlayerController(
+      initialVideoId: video.id,
+      params: YoutubePlayerParams(
+        //playlist: ['nPt8bK2gbaU', 'gQDByCdjUXw'], // Defining custom playlist
+        //startAt: Duration(seconds: 30),
+        showControls: true,
+        showFullscreenButton: true,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(video.title),
+        title: Html(
+          data: video.title,
+          style: {'body': Style(color: Colors.white, fontSize: FontSize(16))},
+        ),
       ),
       body: Center(
-        child: FlutterYoutubeView(
-          //onViewCreated: _onYoutubeCreated,
-          //listener: this,
-          scaleMode: YoutubeScaleMode.none, // <option> fitWidth, fitHeight
-          params: YoutubeParam(
-            videoId: video.id,
-            showUI: true,
-            startSeconds: 0.0, // <option>
-            autoPlay: true,
-          ), // <option>
+        child: YoutubePlayerIFramePlus(
+          controller: ytController,
+          aspectRatio: 16 / 9,
         ),
       ),
     );

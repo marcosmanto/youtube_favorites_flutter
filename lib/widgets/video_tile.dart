@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:youtube_favorites_flutter/blocs/favorite_bloc.dart';
 
 import '../models/video.dart';
+import '../pages/youtube_player.dart';
 
 class VideoTile extends StatelessWidget {
   final Video video;
@@ -20,9 +21,18 @@ class VideoTile extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: Image.network(
-              video.thumb,
-              fit: BoxFit.cover,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => YoutubePlayerPage(video: video),
+                  ),
+                );
+              },
+              child: Image.network(
+                video.thumb,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Row(
