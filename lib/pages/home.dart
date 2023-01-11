@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:youtube_favorites_flutter/blocs/favorite_bloc.dart';
 import 'package:youtube_favorites_flutter/blocs/videos_bloc.dart';
 import 'package:youtube_favorites_flutter/delegates/data_search.dart';
+import 'package:youtube_favorites_flutter/pages/favorites.dart';
 import 'package:youtube_favorites_flutter/widgets/video_tile.dart';
 
 import '../models/video.dart';
@@ -43,7 +44,11 @@ class Home extends StatelessWidget {
             width: 30,
             child: IconButton(
               padding: EdgeInsets.zero,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Favorites(),
+                ));
+              },
               icon: Icon(Icons.star),
             ),
           ),
