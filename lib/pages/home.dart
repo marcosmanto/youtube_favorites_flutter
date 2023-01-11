@@ -1,5 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:youtube_favorites_flutter/blocs/videos_bloc.dart';
 import 'package:youtube_favorites_flutter/delegates/data_search.dart';
 import 'package:youtube_favorites_flutter/widgets/video_tile.dart';
@@ -43,7 +44,7 @@ class Home extends StatelessWidget {
                 context: context,
                 delegate: DataSearch(),
               );
-              if (result != null) {
+              if (result != null && result.trim() != '') {
                 bloc.inSearch.add(result);
               }
             },
@@ -52,6 +53,7 @@ class Home extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<List<Video>>(
+        initialData: [],
         stream: bloc.outVideos,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -60,14 +62,18 @@ class Home extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (index < snapshot.data!.length) {
                   return VideoTile(snapshot.data![index]);
-                } else {
+                } else if (index > 1) {
+                  // ONLY ALLOWS DISPLAY OF LOAD MORE WIDGET
+                  // IF VIDEO SEARCH LIST IS NOT EMPTY WHICH MEANS THAT INDEX FOR
+                  // THE LOAD MORE WIDGET WILL BE MORE THAN 1
+
                   // last item of list is above this
                   // add next items by calling search with null which results in calling nextPage
                   // this block is triggered only when this element is reached by user scrolling
                   bloc.inSearch.add(null);
 
                   return Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Container(
                       height: 40,
                       width: 40,
@@ -75,6 +81,37 @@ class Home extends StatelessWidget {
                       child: CircularProgressIndicator(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Html(
+                      data:
+                          '''Realize uma pesquisa <strong>clicando na lupa</strong> <lupa></lupa> para listar os vídeos.''',
+                      style: {
+                        'body': Style(
+                          color: Colors.white,
+                          fontSize: FontSize(16),
+                          textAlign: TextAlign.center,
+                          lineHeight: LineHeight(1.5),
+                        )
+                      },
+                      customRender: {
+                        "lupa": (RenderContext context, Widget child) {
+                          return Transform.translate(
+                            offset: Offset(0, 4.5),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 2, 0),
+                              child: Icon(
+                                Icons.search_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                      },
+                      tagsList: Html.tags..addAll(["lupa"]),
                     ),
                   );
                 }

@@ -28,7 +28,12 @@ class VideosBloc extends BlocBase {
 
   void _search(String? search) async {
     if (search != null) {
-      videos = await YoutubeApi.search(search);
+      _videosController.add([]);
+      try {
+        videos = await YoutubeApi.search(search);
+      } catch (e) {
+        print(e.toString());
+      }
     } else {
       // Adding next page to existing list. Dart allows list unions using +=
       videos += await YoutubeApi.nextPage();
