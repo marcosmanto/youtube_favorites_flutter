@@ -21,7 +21,7 @@ class YoutubeApi {
   static Future<List<Video>> nextPage() async {
     http.Response response = await http.get(
       Uri.parse(
-          '${FirebaseApi.baseUri.value}search?part=snippet&maxResults=10&q=$search&type=video&key=${FirebaseApi.key.value}&pageToken=$_nextToken'),
+          '${FirebaseApi.baseUri.value}search?part=snippet&maxResults=10&q=$_search&type=video&key=${FirebaseApi.key.value}&pageToken=$_nextToken'),
     );
 
     return _decode(response);

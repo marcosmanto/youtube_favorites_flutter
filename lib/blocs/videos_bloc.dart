@@ -33,7 +33,6 @@ class VideosBloc extends BlocBase {
       // Adding next page to existing list. Dart allows list unions using +=
       videos += await YoutubeApi.nextPage();
     }
-    print('searching 10 more...');
     _videosController.add(videos);
   }
 }
