@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:youtube_favorites_flutter/blocs/favorite_bloc.dart';
 import 'package:youtube_favorites_flutter/models/video.dart';
+import 'package:youtube_favorites_flutter/pages/youtube_player.dart';
 
 class Favorites extends StatelessWidget {
   const Favorites({super.key});
@@ -34,7 +35,9 @@ class Favorites extends StatelessWidget {
                       children: [
                         ListTile(
                           onTap: () {
-                            print('listtile');
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    YoutubePlayer(video: favVideos[index])));
                           },
                           leading: IconButton(
                             onPressed: () =>
