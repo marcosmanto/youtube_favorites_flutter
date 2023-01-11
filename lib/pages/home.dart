@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:youtube_favorites_flutter/blocs/favorite_bloc.dart';
 import 'package:youtube_favorites_flutter/blocs/videos_bloc.dart';
 import 'package:youtube_favorites_flutter/delegates/data_search.dart';
 import 'package:youtube_favorites_flutter/widgets/video_tile.dart';
@@ -13,6 +14,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.getBloc<VideosBloc>();
+    final blocFavorites = BlocProvider.getBloc<FavoriteBloc>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.tertiary,
@@ -27,7 +29,14 @@ class Home extends StatelessWidget {
             alignment: Alignment.center,
             child: Transform.translate(
               offset: Offset(0, 2.25),
-              child: Text('0'),
+              child: StreamBuilder<Map<String, Video>>(
+                stream: blocFavorites.outFavorites,
+                builder: (context, snapshot) {
+                  return Text(snapshot.hasData
+                      ? snapshot.data!.length.toString()
+                      : '0');
+                },
+              ),
             ),
           ),
           SizedBox(
