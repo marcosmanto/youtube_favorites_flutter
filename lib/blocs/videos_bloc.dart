@@ -8,7 +8,7 @@ class VideosBloc extends BlocBase {
   List<Video> videos = [];
   final _videosController = StreamController<List<Video>>();
   // receives data from outside
-  final _searchController = StreamController<String>();
+  final _searchController = StreamController<String?>();
 
   VideosBloc() {
     _searchController.stream.listen(_search);
@@ -26,8 +26,14 @@ class VideosBloc extends BlocBase {
     super.dispose();
   }
 
-  void _search(String search) async {
-    videos = await YoutubeApi.search(search);
+  void _search(String? search) async {
+    if (search != null) {
+      videos = await YoutubeApi.search(search);
+    } else {
+      // Adding next page to existing list. Dart allows list unions using +=
+      videos += await YoutubeApi.nextPage();
+    }
+    print('searching 10 more...');
     _videosController.add(videos);
   }
 }

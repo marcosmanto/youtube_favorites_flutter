@@ -11,6 +11,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.getBloc<VideosBloc>();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       appBar: AppBar(
@@ -42,7 +44,7 @@ class Home extends StatelessWidget {
                 delegate: DataSearch(),
               );
               if (result != null) {
-                BlocProvider.getBloc<VideosBloc>().inSearch.add(result);
+                bloc.inSearch.add(result);
               }
             },
             icon: Icon(Icons.search),
@@ -50,13 +52,32 @@ class Home extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<List<Video>>(
-        stream: BlocProvider.getBloc<VideosBloc>().outVideos,
+        stream: bloc.outVideos,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data!.length + 1,
               itemBuilder: (context, index) {
-                return VideoTile(snapshot.data![index]);
+                if (index < snapshot.data!.length) {
+                  return VideoTile(snapshot.data![index]);
+                } else {
+                  // last item of list is above this
+                  // add next items by calling search with null which results in calling nextPage
+                  // this block is triggered only when this element is reached by user scrolling
+                  bloc.inSearch.add(null);
+
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  );
+                }
               },
             );
           } else {
